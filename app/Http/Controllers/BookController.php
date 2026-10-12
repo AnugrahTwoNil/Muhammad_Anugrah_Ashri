@@ -19,11 +19,33 @@ class BookController extends Controller
 
     public function store(Request $request)
     {
-        // TODO: Validasi title, author, dan published_year sesuai kontrak latihan.
-        // TODO: Simpan data yang lolos validasi dengan model Book.
-        // TODO: Kembalikan JSON data buku baru dengan status HTTP 201.
+        $request->validate([
+            'title' => 'required|string|max:150',
+            'author' => 'required|string|max:100',
+            'published_year' => 'required|integer|between:1900,' . date('Y'),
+        ]);
+
+        $book = Book::create($request->all());
+
+            return response()->json ([
+                'message' => 'book created successfully',
+                'data' => $book,
+            ], 201);
+    }
+
+        public function show(string $id)
+    {
+        $book = Book::find($id);
+
+        if(!$book) {
+            return response()->json([
+                'message' => 'book gada lho',
+            ], 404);
+        }
+                
         return response()->json([
-            'message' => 'Fitur tambah buku belum diimplementasikan. Lengkapi TODO pada BookController.',
-        ], 501);
+            'message' => 'Data book',
+            'data' => $book
+        ], 200);
     }
 }
